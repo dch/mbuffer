@@ -96,7 +96,11 @@ enhances overall performance, by avoiding tape screwing.
 Same as above only for setting the transfer limit for the writer.
 .TP 
 \fB\-A\fR <\fIcmd\fP>
-the device used is an autoloader which uses \fIcmd\fP to load the next volume
+the device used is an autoloader which uses \fIcmd\fP to load the next
+volume. Pass <\fI/bin/false\fP> as an autoload command to suppress the
+warning message that appears when run without controlling terminal (e.g.
+via cron). Like this the autoload will fail and mbuffer will terminate
+with an error message when reaching the end of the tape.
 .TP 
 \fB\-a\fR <\fItime\fP>
 the device used is an autoloader which takes \fItime\fP seconds to load a new tape
@@ -119,6 +123,9 @@ I/O debugging). Higher values include lower values messages.
 .TP 
 \fB\-q\fR
 quiet \- do not display the status on the standard error output
+.TP 
+\fB\-Q\fR
+quiet \- do not log the status in the log file
 .TP 
 \fB\-\-direct\fR
 Use O_DIRECT to open file descriptors. This option is not available on
@@ -159,6 +166,38 @@ for a complete period, the watchdog writes an error message and
 terminates mbuffer via SIGINT. Be aware that the watchdog is unaware of
 tape-change activities. So choose the watchdog timeout greater that the
 worst-case tape-change time.
+.SH "DEFAULT VALUES"
+The default values for following options can be set as \fIkey = value\fP pairs
+in the ~/.mbuffer.rc file:
+.br
+\fIblocksize\fP: block size (option -s)
+.br
+\fItimeout\fP: watchdog timeout (option -W)
+.br
+\fItotalmem\fP: total buffer size (option -m)
+.br
+\fImaxreadspeed\fP: maximum read speed (option -r)
+.br
+\fImaxwritespeed\fP: maximum write speed (option -R)
+.br
+\fIstartwrite\fP: threshold for start writing (option -P)
+.br
+\fIstartread\fP: threshold for start reading (option -p)
+.br
+\fIpause\fP: pause after writing a block (option -u)
+.br
+\fInumblocks\fP: number of blocks in buffer (option -b)
+.br
+\fImemlock\fP: lock buffer in memory (option -L)
+.br
+\fIshowstatus\fP: print transfer status on console (option -q)
+.br
+\fIlogstatus\fP: write transfer status to logfile (option -Q)
+.br
+\fItcpbuffer\fP: TCP buffer size (option --tcpbuffer)
+.br
+
+
 .SH "ENVIRONMENT VARIABLES"
 If TMPDIR is set, mbuffer allocates storage for file-based buffers in this
 directory\&. If TMPDIR is unset, \fI/var/tmp\fR will be used\&.
@@ -167,6 +206,8 @@ directory\&. If TMPDIR is unset, \fI/var/tmp\fR will be used\&.
 \fI@prefix@/bin/mbuffer\fP 
 .br 
 \fI/var/tmp/mbuffer-*\fP 
+.br 
+\fI~/.mbuffer.rc\fP 
 .SH "EXAMPLES"
 .LP 
 To run this program with the default options just type:
